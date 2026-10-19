@@ -104,13 +104,13 @@ yarn install
 **`vite.config.ts`**
 
 ```typescript
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
-  appType: 'spa',
-  base: '',
+  appType: "spa",
+  base: "",
   resolve: {
     tsconfigPaths: true,
   },
@@ -180,7 +180,7 @@ src/
 ### `src/styles/utils.ts`
 
 ```typescript
-import { keyframes } from 'styled-components';
+import { keyframes } from "styled-components";
 
 export type IStyledProps = {
   active?: boolean;
@@ -198,7 +198,7 @@ export type IStyledProps = {
   top?: boolean;
   bottom?: boolean;
   wrap?: boolean;
-  responsive?: boolean | 'reverse-left';
+  responsive?: boolean | "reverse-left";
   reverse?: boolean;
   half?: boolean;
   fit?: boolean;
@@ -208,7 +208,7 @@ export type IStyledProps = {
 };
 
 export const cssSize = (size: number | string) => {
-  if (typeof size === 'string') return size;
+  if (typeof size === "string") return size;
   return `${(size * 0.2).toFixed(1)}rem`;
 };
 
@@ -237,49 +237,72 @@ export const isMobileScreen = () => window.innerWidth <= screenSize.tablet;
 ### `src/styles/theme.ts`
 
 ```typescript
-export type IThemeColors = 'indigo' | 'purple' | 'blue' | 'green' | 'red';
+export type IThemeColors = "indigo" | "purple" | "blue" | "green" | "red";
 
 export type IThemeProps = {
   colors: {
     main: string;
     mainBg: string;
     mainText: string;
-    bg1: string; bg2: string; bg3: string; bg4: string;
-    text1: string; text2: string; text3: string; text4: string;
-    gray: string; yellow: string; red: string; blue: string; green: string;
-    white: string; black: string;
+    bg1: string;
+    bg2: string;
+    bg3: string;
+    bg4: string;
+    text1: string;
+    text2: string;
+    text3: string;
+    text4: string;
+    gray: string;
+    yellow: string;
+    red: string;
+    blue: string;
+    green: string;
+    white: string;
+    black: string;
   };
-  fontSize: { md: string; sm: string; xs: string; label: string; h1: string; h2: string; h3: string; h4: string; h5: string; h6: string; };
-  border: { sm: string; md: string; lg: string; };
-  radius: { sm: string; md: string; lg: string; xl: string; full: string; };
-  shadow: { sm: string; md: string; lg: string; };
+  fontSize: {
+    md: string;
+    sm: string;
+    xs: string;
+    label: string;
+    h1: string;
+    h2: string;
+    h3: string;
+    h4: string;
+    h5: string;
+    h6: string;
+  };
+  border: { sm: string; md: string; lg: string };
+  radius: { sm: string; md: string; lg: string; xl: string; full: string };
+  shadow: { sm: string; md: string; lg: string };
 };
 
 export const getTheme = (dark: boolean, color: IThemeColors): IThemeProps => {
   // Return full theme object; swap bg/text tokens when dark === true
   // See existing implementation for reference values
-  throw new Error('implement getTheme');
+  throw new Error("implement getTheme");
 };
 
 export const getLocalTheme = () => {
-  const mode = localStorage.getItem('theme_mode') || 'light';
-  const color = (localStorage.getItem('theme_color') || 'indigo') as IThemeColors;
-  return { mode, color } as { mode: 'light' | 'dark'; color: IThemeColors };
+  const mode = localStorage.getItem("theme_mode") || "light";
+  const color = (localStorage.getItem("theme_color") ||
+    "indigo") as IThemeColors;
+  return { mode, color } as { mode: "light" | "dark"; color: IThemeColors };
 };
 
-export const saveLocalTheme = (mode: 'light' | 'dark', color: IThemeColors) => {
-  if (mode) localStorage.setItem('theme_mode', mode);
-  if (color) localStorage.setItem('theme_color', color);
+export const saveLocalTheme = (mode: "light" | "dark", color: IThemeColors) => {
+  if (mode) localStorage.setItem("theme_mode", mode);
+  if (color) localStorage.setItem("theme_color", color);
 };
 ```
 
 ### `src/theme.d.ts`
 
 ```typescript
-import 'styled-components';
-import { IThemeProps } from 'src/styles/theme';
+import "styled-components";
+import { IThemeProps } from "src/styles/theme";
 
-declare module 'styled-components' {
+declare module "styled-components" {
   export interface DefaultTheme extends IThemeProps {}
 }
 ```
@@ -287,14 +310,21 @@ declare module 'styled-components' {
 ### `src/styles/global.ts`
 
 ```typescript
-import { createGlobalStyle, css } from 'styled-components';
+import { createGlobalStyle, css } from "styled-components";
 
 export default createGlobalStyle(
   ({ theme }) => css`
-    * { margin: 0; padding: 0; outline: 0; box-sizing: border-box; }
-    html { font-size: 16px; }
+    * {
+      margin: 0;
+      padding: 0;
+      outline: 0;
+      box-sizing: border-box;
+    }
+    html {
+      font-size: 16px;
+    }
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: "Roboto", sans-serif;
       font-size: ${theme.fontSize.md};
       min-height: 100vh;
       background-color: ${theme.colors.bg4};
@@ -373,9 +403,9 @@ export default AppProviders;
 ### `src/lib/common/StyledComponents/Containers.ts`
 
 ```typescript
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
-import { cssSize, screenSize } from 'src/styles/utils';
+import { cssSize, screenSize } from "src/styles/utils";
 
 export const PageContainer = styled.div(
   () => css`
@@ -416,9 +446,9 @@ export const Card = styled.div(
 ### `src/lib/common/StyledComponents/Flex.ts`
 
 ```typescript
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
-import { IStyledProps, cssSize, screenSize } from 'src/styles/utils';
+import { IStyledProps, cssSize, screenSize } from "src/styles/utils";
 
 const FlexBase = styled.div<IStyledProps>(
   ({ w, h, fit }) => css`
@@ -436,16 +466,16 @@ export const Row = styled(FlexBase)(
   ({ gap, left, right, top, bottom, wrap, between, responsive }) => css`
     flex-direction: row;
     gap: ${cssSize(gap ?? 2)};
-    ${left && 'justify-content: flex-start;'}
-    ${right && 'justify-content: flex-end;'}
-    ${between && 'justify-content: space-between;'}
-    ${top && 'align-items: flex-start;'}
-    ${bottom && 'align-items: flex-end;'}
-    ${wrap && 'flex-wrap: wrap;'}
+    ${left && "justify-content: flex-start;"}
+    ${right && "justify-content: flex-end;"}
+    ${between && "justify-content: space-between;"}
+    ${top && "align-items: flex-start;"}
+    ${bottom && "align-items: flex-end;"}
+    ${wrap && "flex-wrap: wrap;"}
 
     @media (max-width: ${screenSize.laptopS}px) {
-      ${responsive && 'flex-direction: column;'}
-      ${responsive && left && 'align-items: flex-start;'}
+      ${responsive && "flex-direction: column;"}
+      ${responsive && left && "align-items: flex-start;"}
     }
   `,
 );
@@ -454,10 +484,10 @@ export const Column = styled(FlexBase)(
   ({ gap, left, right, top, bottom }) => css`
     flex-direction: column;
     gap: ${cssSize(gap ?? 2)};
-    ${left && 'align-items: flex-start;'}
-    ${right && 'align-items: flex-end;'}
-    ${top && 'justify-content: flex-start;'}
-    ${bottom && 'justify-content: flex-end;'}
+    ${left && "align-items: flex-start;"}
+    ${right && "align-items: flex-end;"}
+    ${top && "justify-content: flex-start;"}
+    ${bottom && "justify-content: flex-end;"}
   `,
 );
 ```
@@ -549,15 +579,15 @@ yarn format
 
 ## 10. Conventions
 
-| Rule | Detail |
-|------|--------|
-| Theme tokens | Always use `theme.colors.*`, `theme.fontSize.*`, `theme.radius.*` — never hardcode colors or sizes |
-| Sizing | Use `cssSize(n)` for spacing/padding (1 unit = 0.2rem) |
-| Breakpoints | Use `screenSize.*` constants from `src/styles/utils.ts` |
-| Styled components | Define with `css\`\`` helper for theme access; use `IStyledProps` for shared prop types |
-| CSS injection | Always wrap with `StyleSheetManager disableCSSOMInjection shouldForwardProp={isValidProp}` |
-| Theme forwarding | Use `@emotion/is-prop-valid` to prevent custom props from leaking to DOM |
-| Imports | Use `src/` path alias — never use relative `../../` beyond one level |
-| Import order | Enforced by `@trivago/prettier-plugin-sort-imports`: external → `src/` → relative |
-| App entry | `ThemeProvider` wraps `AppProviders` wraps `RouterProvider` — order is required |
-| Dark mode | Persisted to `localStorage` under `theme_mode` and `theme_color` keys |
+| Rule              | Detail                                                                                             |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Theme tokens      | Always use `theme.colors.*`, `theme.fontSize.*`, `theme.radius.*` — never hardcode colors or sizes |
+| Sizing            | Use `cssSize(n)` for spacing/padding (1 unit = 0.2rem)                                             |
+| Breakpoints       | Use `screenSize.*` constants from `src/styles/utils.ts`                                            |
+| Styled components | Define with `css\`\``helper for theme access; use`IStyledProps` for shared prop types              |
+| CSS injection     | Always wrap with `StyleSheetManager disableCSSOMInjection shouldForwardProp={isValidProp}`         |
+| Theme forwarding  | Use `@emotion/is-prop-valid` to prevent custom props from leaking to DOM                           |
+| Imports           | Use `src/` path alias — never use relative `../../` beyond one level                               |
+| Import order      | Enforced by `@trivago/prettier-plugin-sort-imports`: external → `src/` → relative                  |
+| App entry         | `ThemeProvider` wraps `AppProviders` wraps `RouterProvider` — order is required                    |
+| Dark mode         | Persisted to `localStorage` under `theme_mode` and `theme_color` keys                              |

@@ -233,9 +233,9 @@ src/
 ### `src/main.ts`
 
 ```typescript
-import { NestFactory } from '@nestjs/core';
+import { NestFactory } from "@nestjs/core";
 
-import { AppModule } from './app.module';
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -247,12 +247,12 @@ bootstrap();
 ### `src/app.module.ts`
 
 ```typescript
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
-import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { SwaggerModule } from './modules/docs/swegger.module';
-import { UserModule } from './modules/users/user.module';
+import { DatabaseModule } from "./database/database.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { SwaggerModule } from "./modules/docs/swegger.module";
+import { UserModule } from "./modules/users/user.module";
 
 @Module({
   imports: [DatabaseModule, SwaggerModule, UserModule, AuthModule],
@@ -264,19 +264,19 @@ export class AppModule {}
 ### `src/constants/dotenv.ts`
 
 ```typescript
-import 'dotenv/config';
+import "dotenv/config";
 
 const dotenv = {
-  BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
+  BASE_URL: process.env.BASE_URL || "http://localhost:3000",
   PORT: Number(process.env.PORT) || 3000,
-  DB_HOST: process.env.DB_HOST || '',
+  DB_HOST: process.env.DB_HOST || "",
   DB_PORT: Number(process.env.DB_PORT) || 5432,
-  DB_USERNAME: process.env.DB_USERNAME || '',
-  DB_PASSWORD: process.env.DB_PASSWORD || '',
-  DB_NAME: process.env.DB_NAME || '',
-  JWT_SECRET: process.env.JWT_SECRET || '',
-  JWT_EXPIRATION: process.env.JWT_EXPIRATION || '7d',
-  JWT_REFRESH_EXPIRATION: process.env.JWT_REFRESH_EXPIRATION || '30d',
+  DB_USERNAME: process.env.DB_USERNAME || "",
+  DB_PASSWORD: process.env.DB_PASSWORD || "",
+  DB_NAME: process.env.DB_NAME || "",
+  JWT_SECRET: process.env.JWT_SECRET || "",
+  JWT_EXPIRATION: process.env.JWT_EXPIRATION || "7d",
+  JWT_REFRESH_EXPIRATION: process.env.JWT_REFRESH_EXPIRATION || "30d",
 };
 
 export default dotenv;
@@ -285,22 +285,22 @@ export default dotenv;
 ### `src/database/database.module.ts`
 
 ```typescript
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { UserEntity } from '../modules/users/entity/user.entity';
+import { UserEntity } from "../modules/users/entity/user.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
+        type: "postgres",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        username: configService.get<string>("DB_USERNAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        database: configService.get<string>("DB_NAME"),
         entities: [UserEntity],
         synchronize: true,
       }),
@@ -314,9 +314,9 @@ export class DatabaseModule {}
 ### `src/modules/common/dto/apiResponse.ts`
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
-import { createZodDto } from '../../../utils/zod';
+import { createZodDto } from "../../../utils/zod";
 
 export class SuccessDto extends createZodDto(
   z.object({
@@ -350,9 +350,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-@Entity('users')
+@Entity("users")
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -369,13 +369,13 @@ export class UserEntity {
   @Column({ length: 255, nullable: true })
   recoveryToken!: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: "timestamp", nullable: true })
   recoveryTokenExpiration!: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: "timestamp" })
   updatedAt!: Date;
 }
 ```
@@ -383,8 +383,8 @@ export class UserEntity {
 ### `src/modules/users/dto/user.dto.ts`
 
 ```typescript
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 const userSchema = {
   id: z.number(),
@@ -404,11 +404,13 @@ export class CreateUserDto extends createZodDto(
 ) {}
 
 export class UpdateUserDto extends createZodDto(
-  z.object({
-    name: userSchema.name,
-    email: userSchema.email,
-    password: userSchema.password,
-  }).partial(),
+  z
+    .object({
+      name: userSchema.name,
+      email: userSchema.email,
+      password: userSchema.password,
+    })
+    .partial(),
 ) {}
 
 export class GetUserResponseDto extends createZodDto(
@@ -425,13 +427,17 @@ export class GetUserResponseDto extends createZodDto(
 ### `src/modules/users/user.service.ts`
 
 ```typescript
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { ErrorDto } from '../common/dto/apiResponse';
-import { CreateUserDto, GetUserResponseDto, UpdateUserDto } from './dto/user.dto';
-import { UserEntity } from './entity/user.entity';
+import { ErrorDto } from "../common/dto/apiResponse";
+import {
+  CreateUserDto,
+  GetUserResponseDto,
+  UpdateUserDto,
+} from "./dto/user.dto";
+import { UserEntity } from "./entity/user.entity";
 
 @Injectable()
 export class UserService {
@@ -443,21 +449,25 @@ export class UserService {
   async findAll(): Promise<GetUserResponseDto[] | ErrorDto> {
     try {
       const users = await this.userRepository.find();
-      return users.map(u => GetUserResponseDto.create(u));
+      return users.map((u) => GetUserResponseDto.create(u));
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to fetch users', details });
+      return ErrorDto.create({ message: "Failed to fetch users", details });
     }
   }
 
   async findOne(id: number): Promise<GetUserResponseDto | ErrorDto> {
     try {
       const user = await this.userRepository.findOneBy({ id });
-      if (!user) return ErrorDto.create({ message: 'User not found', code: 'not_found' });
+      if (!user)
+        return ErrorDto.create({
+          message: "User not found",
+          code: "not_found",
+        });
       return GetUserResponseDto.create(user);
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to fetch user', details });
+      return ErrorDto.create({ message: "Failed to fetch user", details });
     }
   }
 
@@ -468,27 +478,30 @@ export class UserService {
       return GetUserResponseDto.create(saved);
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to create user', details });
+      return ErrorDto.create({ message: "Failed to create user", details });
     }
   }
 
-  async update(id: number, dto: UpdateUserDto): Promise<GetUserResponseDto | ErrorDto> {
+  async update(
+    id: number,
+    dto: UpdateUserDto,
+  ): Promise<GetUserResponseDto | ErrorDto> {
     try {
       await this.userRepository.update(id, dto);
       return this.findOne(id);
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to update user', details });
+      return ErrorDto.create({ message: "Failed to update user", details });
     }
   }
 
   async delete(id: number): Promise<{ message: string } | ErrorDto> {
     try {
       await this.userRepository.delete(id);
-      return { message: 'User deleted successfully' };
+      return { message: "User deleted successfully" };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to delete user', details });
+      return ErrorDto.create({ message: "Failed to delete user", details });
     }
   }
 }
@@ -497,13 +510,23 @@ export class UserService {
 ### `src/modules/users/user.controller.ts`
 
 ```typescript
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UsePipes } from '@nestjs/common';
-import { ZodValidationPipe } from 'nestjs-zod';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  UsePipes,
+} from "@nestjs/common";
+import { ZodValidationPipe } from "nestjs-zod";
 
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { UserService } from './user.service';
+import { CreateUserDto, UpdateUserDto } from "./dto/user.dto";
+import { UserService } from "./user.service";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -512,8 +535,8 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.userService.findOne(+id);
   }
 
@@ -523,20 +546,20 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @Put(':id')
+  @Put(":id")
   @UsePipes(ZodValidationPipe)
-  updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  updateUser(@Param("id") id: string, @Body() dto: UpdateUserDto) {
     return this.userService.update(+id, dto);
   }
 
-  @Patch(':id')
+  @Patch(":id")
   @UsePipes(ZodValidationPipe)
-  patchUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  patchUser(@Param("id") id: string, @Body() dto: UpdateUserDto) {
     return this.userService.update(+id, dto);
   }
 
-  @Delete(':id')
-  deleteUser(@Param('id') id: string) {
+  @Delete(":id")
+  deleteUser(@Param("id") id: string) {
     return this.userService.delete(+id);
   }
 }
@@ -545,12 +568,12 @@ export class UserController {
 ### `src/modules/users/user.module.ts`
 
 ```typescript
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { UserEntity } from './entity/user.entity';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { UserEntity } from "./entity/user.entity";
+import { UserController } from "./user.controller";
+import { UserService } from "./user.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -569,8 +592,8 @@ The auth module provides JWT-based sign-in, sign-up, sign-out, token refresh, pa
 ### `src/modules/auth/dto/auth.dto.ts`
 
 ```typescript
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 export class SignInDto extends createZodDto(
   z.object({
@@ -631,15 +654,15 @@ export class AuthResponseDto extends createZodDto(
 ### `src/modules/auth/auth.service.ts`
 
 ```typescript
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import * as bcrypt from "bcryptjs";
+import * as jwt from "jsonwebtoken";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import dotenv from '../../constants/dotenv';
-import { ErrorDto } from '../common/dto/apiResponse';
-import { UserEntity } from '../users/entity/user.entity';
+import dotenv from "../../constants/dotenv";
+import { ErrorDto } from "../common/dto/apiResponse";
+import { UserEntity } from "../users/entity/user.entity";
 import {
   AuthResponseDto,
   GoogleSignInDto,
@@ -649,7 +672,7 @@ import {
   SignInDto,
   SignUpDto,
   VerifyRecoveryCodeDto,
-} from './dto/auth.dto';
+} from "./dto/auth.dto";
 
 @Injectable()
 export class AuthService {
@@ -660,10 +683,10 @@ export class AuthService {
 
   private signTokens(userId: number, email: string) {
     const accessToken = jwt.sign({ sub: userId, email }, dotenv.JWT_SECRET, {
-      expiresIn: dotenv.JWT_EXPIRATION as jwt.SignOptions['expiresIn'],
+      expiresIn: dotenv.JWT_EXPIRATION as jwt.SignOptions["expiresIn"],
     });
     const refreshToken = jwt.sign({ sub: userId, email }, dotenv.JWT_SECRET, {
-      expiresIn: dotenv.JWT_REFRESH_EXPIRATION as jwt.SignOptions['expiresIn'],
+      expiresIn: dotenv.JWT_REFRESH_EXPIRATION as jwt.SignOptions["expiresIn"],
     });
     return AuthResponseDto.create({ accessToken, refreshToken });
   }
@@ -671,22 +694,36 @@ export class AuthService {
   async signIn(dto: SignInDto): Promise<AuthResponseDto | ErrorDto> {
     try {
       const user = await this.userRepository.findOneBy({ email: dto.email });
-      if (!user) return ErrorDto.create({ message: 'Invalid credentials', code: 'unauthorized' });
+      if (!user)
+        return ErrorDto.create({
+          message: "Invalid credentials",
+          code: "unauthorized",
+        });
 
       const valid = await bcrypt.compare(dto.password, user.password);
-      if (!valid) return ErrorDto.create({ message: 'Invalid credentials', code: 'unauthorized' });
+      if (!valid)
+        return ErrorDto.create({
+          message: "Invalid credentials",
+          code: "unauthorized",
+        });
 
       return this.signTokens(user.id, user.email);
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Sign-in failed', details });
+      return ErrorDto.create({ message: "Sign-in failed", details });
     }
   }
 
   async signUp(dto: SignUpDto): Promise<AuthResponseDto | ErrorDto> {
     try {
-      const existing = await this.userRepository.findOneBy({ email: dto.email });
-      if (existing) return ErrorDto.create({ message: 'Email already in use', code: 'conflict' });
+      const existing = await this.userRepository.findOneBy({
+        email: dto.email,
+      });
+      if (existing)
+        return ErrorDto.create({
+          message: "Email already in use",
+          code: "conflict",
+        });
 
       const hashed = await bcrypt.hash(dto.password, 10);
       const user = await this.userRepository.save(
@@ -695,27 +732,35 @@ export class AuthService {
       return this.signTokens(user.id, user.email);
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Sign-up failed', details });
+      return ErrorDto.create({ message: "Sign-up failed", details });
     }
   }
 
   async signOut(): Promise<{ message: string }> {
-    return { message: 'Signed out successfully' };
+    return { message: "Signed out successfully" };
   }
 
   async refresh(dto: RefreshTokenDto): Promise<AuthResponseDto | ErrorDto> {
     try {
-      const payload = jwt.verify(dto.refreshToken, dotenv.JWT_SECRET) as jwt.JwtPayload;
+      const payload = jwt.verify(
+        dto.refreshToken,
+        dotenv.JWT_SECRET,
+      ) as jwt.JwtPayload;
       return this.signTokens(payload.sub as number, payload.email as string);
     } catch (error) {
-      return ErrorDto.create({ message: 'Invalid or expired refresh token', code: 'unauthorized' });
+      return ErrorDto.create({
+        message: "Invalid or expired refresh token",
+        code: "unauthorized",
+      });
     }
   }
 
-  async sendRecoveryCode(dto: SendRecoveryCodeDto): Promise<{ message: string } | ErrorDto> {
+  async sendRecoveryCode(
+    dto: SendRecoveryCodeDto,
+  ): Promise<{ message: string } | ErrorDto> {
     try {
       const user = await this.userRepository.findOneBy({ email: dto.email });
-      if (!user) return { message: 'Recovery email sent if account exists' };
+      if (!user) return { message: "Recovery email sent if account exists" };
 
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const expiration = new Date(Date.now() + 15 * 60 * 1000);
@@ -724,34 +769,53 @@ export class AuthService {
         recoveryTokenExpiration: expiration,
       });
       // TODO: send email with code
-      return { message: 'Recovery code sent' };
+      return { message: "Recovery code sent" };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to send recovery code', details });
+      return ErrorDto.create({
+        message: "Failed to send recovery code",
+        details,
+      });
     }
   }
 
-  async verifyRecoveryCode(dto: VerifyRecoveryCodeDto): Promise<{ message: string } | ErrorDto> {
+  async verifyRecoveryCode(
+    dto: VerifyRecoveryCodeDto,
+  ): Promise<{ message: string } | ErrorDto> {
     try {
       const user = await this.userRepository.findOneBy({ email: dto.email });
       if (!user || user.recoveryToken !== dto.code)
-        return ErrorDto.create({ message: 'Invalid recovery code', code: 'invalid_code' });
+        return ErrorDto.create({
+          message: "Invalid recovery code",
+          code: "invalid_code",
+        });
       if (new Date() > user.recoveryTokenExpiration)
-        return ErrorDto.create({ message: 'Recovery code expired', code: 'code_expired' });
-      return { message: 'Code verified' };
+        return ErrorDto.create({
+          message: "Recovery code expired",
+          code: "code_expired",
+        });
+      return { message: "Code verified" };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to verify code', details });
+      return ErrorDto.create({ message: "Failed to verify code", details });
     }
   }
 
-  async resetPassword(dto: ResetPasswordDto): Promise<{ message: string } | ErrorDto> {
+  async resetPassword(
+    dto: ResetPasswordDto,
+  ): Promise<{ message: string } | ErrorDto> {
     try {
       const user = await this.userRepository.findOneBy({ email: dto.email });
       if (!user || user.recoveryToken !== dto.code)
-        return ErrorDto.create({ message: 'Invalid recovery code', code: 'invalid_code' });
+        return ErrorDto.create({
+          message: "Invalid recovery code",
+          code: "invalid_code",
+        });
       if (new Date() > user.recoveryTokenExpiration)
-        return ErrorDto.create({ message: 'Recovery code expired', code: 'code_expired' });
+        return ErrorDto.create({
+          message: "Recovery code expired",
+          code: "code_expired",
+        });
 
       const hashed = await bcrypt.hash(dto.newPassword, 10);
       await this.userRepository.update(user.id, {
@@ -759,22 +823,27 @@ export class AuthService {
         recoveryToken: null!,
         recoveryTokenExpiration: null!,
       });
-      return { message: 'Password reset successfully' };
+      return { message: "Password reset successfully" };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Failed to reset password', details });
+      return ErrorDto.create({ message: "Failed to reset password", details });
     }
   }
 
-  async googleSignIn(dto: GoogleSignInDto): Promise<AuthResponseDto | ErrorDto> {
+  async googleSignIn(
+    dto: GoogleSignInDto,
+  ): Promise<AuthResponseDto | ErrorDto> {
     try {
       // Verify idToken with Google OAuth2 client
       // Extract email and name from token payload
       // Upsert user and return tokens
-      return ErrorDto.create({ message: 'Google sign-in not configured', code: 'not_implemented' });
+      return ErrorDto.create({
+        message: "Google sign-in not configured",
+        code: "not_implemented",
+      });
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ message: 'Google sign-in failed', details });
+      return ErrorDto.create({ message: "Google sign-in failed", details });
     }
   }
 }
@@ -783,10 +852,10 @@ export class AuthService {
 ### `src/modules/auth/auth.controller.ts`
 
 ```typescript
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { ZodValidationPipe } from "nestjs-zod";
 
-import { AuthService } from './auth.service';
+import { AuthService } from "./auth.service";
 import {
   GoogleSignInDto,
   RefreshTokenDto,
@@ -795,54 +864,54 @@ import {
   SignInDto,
   SignUpDto,
   VerifyRecoveryCodeDto,
-} from './dto/auth.dto';
+} from "./dto/auth.dto";
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signin')
+  @Post("signin")
   @UsePipes(ZodValidationPipe)
   signIn(@Body() body: SignInDto) {
     return this.authService.signIn(body);
   }
 
-  @Post('signup')
+  @Post("signup")
   @UsePipes(ZodValidationPipe)
   signUp(@Body() body: SignUpDto) {
     return this.authService.signUp(body);
   }
 
-  @Post('signout')
+  @Post("signout")
   signOut() {
     return this.authService.signOut();
   }
 
-  @Post('refresh-token')
+  @Post("refresh-token")
   @UsePipes(ZodValidationPipe)
   refresh(@Body() body: RefreshTokenDto) {
     return this.authService.refresh(body);
   }
 
-  @Post('send-recovery-code')
+  @Post("send-recovery-code")
   @UsePipes(ZodValidationPipe)
   sendRecoveryCode(@Body() body: SendRecoveryCodeDto) {
     return this.authService.sendRecoveryCode(body);
   }
 
-  @Post('verify-recovery-code')
+  @Post("verify-recovery-code")
   @UsePipes(ZodValidationPipe)
   verifyRecoveryCode(@Body() body: VerifyRecoveryCodeDto) {
     return this.authService.verifyRecoveryCode(body);
   }
 
-  @Post('reset-password')
+  @Post("reset-password")
   @UsePipes(ZodValidationPipe)
   resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body);
   }
 
-  @Post('google')
+  @Post("google")
   @UsePipes(ZodValidationPipe)
   googleSignIn(@Body() body: GoogleSignInDto) {
     return this.authService.googleSignIn(body);
@@ -853,12 +922,12 @@ export class AuthController {
 ### `src/modules/auth/auth.module.ts`
 
 ```typescript
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { UserEntity } from '../users/entity/user.entity';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { UserEntity } from "../users/entity/user.entity";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -875,30 +944,33 @@ export class AuthModule {}
 ### `src/modules/auth/auth.spec.ts`
 
 ```typescript
-import axios from 'axios';
-import { randomUUID } from 'crypto';
+import axios from "axios";
+import { randomUUID } from "crypto";
 
-import dotenv from '../../constants/dotenv';
-import { SignInDto, SignUpDto } from './dto/auth.dto';
+import dotenv from "../../constants/dotenv";
+import { SignInDto, SignUpDto } from "./dto/auth.dto";
 
-describe('Auth API', () => {
+describe("Auth API", () => {
   const baseURL = dotenv.BASE_URL;
-  if (!baseURL) throw new Error('missing BASE_URL');
+  if (!baseURL) throw new Error("missing BASE_URL");
   const apiClient = axios.create({ baseURL });
 
-  const testId = randomUUID().replace(/-/g, '');
+  const testId = randomUUID().replace(/-/g, "");
   const signUpDto: SignUpDto = {
     name: `Test User ${testId}`,
     email: `user${testId}@test.com`,
-    password: 'password123',
+    password: "password123",
   };
-  const signInDto: SignInDto = { email: signUpDto.email, password: signUpDto.password };
+  const signInDto: SignInDto = {
+    email: signUpDto.email,
+    password: signUpDto.password,
+  };
 
   let accessToken: string;
   let refreshToken: string;
 
-  it('should sign up and return tokens', async () => {
-    const response = await apiClient.post('/auth/signup', signUpDto);
+  it("should sign up and return tokens", async () => {
+    const response = await apiClient.post("/auth/signup", signUpDto);
     expect(response.status).toBe(201);
     expect(response.data.accessToken).toBeDefined();
     expect(response.data.refreshToken).toBeDefined();
@@ -906,44 +978,53 @@ describe('Auth API', () => {
     refreshToken = response.data.refreshToken;
   });
 
-  it('should return 400 for invalid sign-up data', async () => {
-    await expect(apiClient.post('/auth/signup', { email: 'bad', password: '123' })).rejects
-      .toMatchObject({ response: { status: 400 } });
+  it("should return 400 for invalid sign-up data", async () => {
+    await expect(
+      apiClient.post("/auth/signup", { email: "bad", password: "123" }),
+    ).rejects.toMatchObject({ response: { status: 400 } });
   });
 
-  it('should sign in and return tokens', async () => {
-    const response = await apiClient.post('/auth/signin', signInDto);
+  it("should sign in and return tokens", async () => {
+    const response = await apiClient.post("/auth/signin", signInDto);
     expect(response.status).toBe(201);
     expect(response.data.accessToken).toBeDefined();
   });
 
-  it('should return unauthorized for wrong password', async () => {
+  it("should return unauthorized for wrong password", async () => {
     await expect(
-      apiClient.post('/auth/signin', { ...signInDto, password: 'wrongpassword' }),
+      apiClient.post("/auth/signin", {
+        ...signInDto,
+        password: "wrongpassword",
+      }),
     ).rejects.toMatchObject({ response: { status: 201 } }); // adjust based on service error shape
   });
 
-  it('should refresh tokens', async () => {
-    const response = await apiClient.post('/auth/refresh-token', { refreshToken });
+  it("should refresh tokens", async () => {
+    const response = await apiClient.post("/auth/refresh-token", {
+      refreshToken,
+    });
     expect(response.status).toBe(201);
     expect(response.data.accessToken).toBeDefined();
   });
 
-  it('should sign out', async () => {
-    const response = await apiClient.post('/auth/signout');
+  it("should sign out", async () => {
+    const response = await apiClient.post("/auth/signout");
     expect(response.status).toBe(201);
-    expect(response.data.message).toBe('Signed out successfully');
+    expect(response.data.message).toBe("Signed out successfully");
   });
 
-  it('should send recovery code for existing email', async () => {
-    const response = await apiClient.post('/auth/send-recovery-code', { email: signUpDto.email });
+  it("should send recovery code for existing email", async () => {
+    const response = await apiClient.post("/auth/send-recovery-code", {
+      email: signUpDto.email,
+    });
     expect(response.status).toBe(201);
   });
 
-  it('should clean up test user', async () => {
-    const users = await apiClient.get('/users');
+  it("should clean up test user", async () => {
+    const users = await apiClient.get("/users");
     const user = users.data.find((u: any) => u.email === signUpDto.email);
-    if (user) await apiClient.delete(`/users/${user.id}`).catch(() => undefined);
+    if (user)
+      await apiClient.delete(`/users/${user.id}`).catch(() => undefined);
   });
 });
 ```
@@ -990,19 +1071,19 @@ yarn lint
 
 ## 13. Conventions
 
-| Rule | Detail |
-|------|--------|
-| Module structure | Each feature under `src/modules/<feature>/` with module, controller, service, spec, dto/, entity/ |
-| Validation | `@UsePipes(ZodValidationPipe)` on every route with a `@Body()` parameter |
-| DTOs | Defined with `nestjs-zod` `createZodDto()` — never use plain classes or interfaces |
-| Service return types | Always `Promise<ResponseDto \| ErrorDto>` — never throw, always return |
-| Entity usage | Only injected in services via `@InjectRepository` — never used directly in controllers |
-| Password hashing | Always `bcrypt.hash(password, 10)` — never store plaintext |
-| JWT | Signed with `JWT_SECRET` env var; access token short-lived, refresh token long-lived |
-| Recovery tokens | 6-digit numeric code, 15-minute expiration, stored on user row |
-| Port | Configured via `PORT` env var, defaults to 3000 |
-| TypeORM sync | `synchronize: true` in dev — disable in production and use migrations |
-| Tests | Integration only — run against live server, no mocks |
+| Rule                 | Detail                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| Module structure     | Each feature under `src/modules/<feature>/` with module, controller, service, spec, dto/, entity/ |
+| Validation           | `@UsePipes(ZodValidationPipe)` on every route with a `@Body()` parameter                          |
+| DTOs                 | Defined with `nestjs-zod` `createZodDto()` — never use plain classes or interfaces                |
+| Service return types | Always `Promise<ResponseDto \| ErrorDto>` — never throw, always return                            |
+| Entity usage         | Only injected in services via `@InjectRepository` — never used directly in controllers            |
+| Password hashing     | Always `bcrypt.hash(password, 10)` — never store plaintext                                        |
+| JWT                  | Signed with `JWT_SECRET` env var; access token short-lived, refresh token long-lived              |
+| Recovery tokens      | 6-digit numeric code, 15-minute expiration, stored on user row                                    |
+| Port                 | Configured via `PORT` env var, defaults to 3000                                                   |
+| TypeORM sync         | `synchronize: true` in dev — disable in production and use migrations                             |
+| Tests                | Integration only — run against live server, no mocks                                              |
 
 ---
 

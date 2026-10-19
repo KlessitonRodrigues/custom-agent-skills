@@ -58,12 +58,7 @@ Replace the generated `package.json`:
     "turbo": "^2.10.3"
   },
   "packageManager": "yarn@1.22.22",
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "services/*",
-    "tests/*"
-  ]
+  "workspaces": ["apps/*", "packages/*", "services/*", "tests/*"]
 }
 ```
 
@@ -206,17 +201,17 @@ yarn turbo run build --filter=@apps/web...
 
 ## 9. Conventions
 
-| Rule | Detail |
-|------|--------|
-| Package names | Scoped to workspace folder: `@apps/`, `@packages/`, `@services/`, `@tests/` |
-| `build` task | Runs after all dependencies build (`^build`); outputs go to `out/`, `dist/`, or `cdk.out/` |
-| `dev` task | Persistent and cached; runs all dev servers in parallel |
-| `lint` task | Runs after all dependencies lint (`^lint`) |
-| `test` task | Runs after build (`^build`); use integration tests, not unit mocks |
-| Internal deps | Reference with `"*"` version in `package.json` dependencies |
-| Cache | `build` cache is off by default; `dev` cache is on |
-| `.turbo/` | Auto-generated cache dir — always gitignored |
-| `node_modules/` | Hoisted to root by Yarn workspaces; always gitignored |
+| Rule            | Detail                                                                                     |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| Package names   | Scoped to workspace folder: `@apps/`, `@packages/`, `@services/`, `@tests/`                |
+| `build` task    | Runs after all dependencies build (`^build`); outputs go to `out/`, `dist/`, or `cdk.out/` |
+| `dev` task      | Persistent and cached; runs all dev servers in parallel                                    |
+| `lint` task     | Runs after all dependencies lint (`^lint`)                                                 |
+| `test` task     | Runs after build (`^build`); use integration tests, not unit mocks                         |
+| Internal deps   | Reference with `"*"` version in `package.json` dependencies                                |
+| Cache           | `build` cache is off by default; `dev` cache is on                                         |
+| `.turbo/`       | Auto-generated cache dir — always gitignored                                               |
+| `node_modules/` | Hoisted to root by Yarn workspaces; always gitignored                                      |
 
 ---
 
